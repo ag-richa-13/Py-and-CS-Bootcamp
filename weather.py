@@ -6,24 +6,28 @@ from datetime import datetime
 # Enter api id and city name
 api_key = '87d845b0b6cf29baa1a73cc34b067a95'
 city_name = input("Enter City Name: ")
+# base url
 base_url = "https://api.openweathermap.org/data/2.5/weather?"
-complete_url = base_url + "q="+city_name+"&appid="+api_key
-api_link = requests.get(complete_url)
-api_data = api_link.json()
 
-#create variables to store and display data
-temp_city = ((api_data['main']['temp']) - 273.15)
-weather_desc = api_data['weather'][0]['description']
-hmdt = api_data['main']['humidity']
-wind_spd = api_data['wind']['speed']
+
+data = requests.get(base_url+f"q={city_name}&units=metric&APPID={api_key}")
+
+#create date variable
+
 date_time = datetime.now().strftime("%d %b %Y | %I:%M:%S %p")
 
 print ("---------------------------------------------------------------------")
 print ("Weather Stats for - {}  || {}".format(city_name.upper(), date_time))
 print ("---------------------------------------------------------------------")
 print("--------------------------------------------")
-print ("Current Temperature : {:.2f} deg C".format(temp_city))
-print ("Current weather desc  :",weather_desc)
-print ("Current Humidity      :",hmdt, '%')
-print ("Current wind speed    :",wind_spd ,'kmph')
+# print(data.json())
+# getting the data
+print(f"Location: {data.json().get('name')}, {data.json().get('sys').get('country')}")
+print(f"Temperature: {data.json().get('main')['temp']}°C")
+print(f"Weather: {data.json().get('weather')[0].get('main')}")
+print(
+    f"Min/Max Temperature: {data.json().get('main')['temp_min']}°C/{data.json().get('main')['temp_max']}°C"
+)
+print(f"Humidity: {data.json().get('main')['humidity']}%")
+print(f"Wind: {data.json().get('wind')['speed']} km/h")
 print("--------------------------------------------")
